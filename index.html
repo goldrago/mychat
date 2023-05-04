@@ -33,7 +33,7 @@
     // Add a second text box
     var completion = document.createElement("textarea");
     completion.id = "completion";
-    completion.onUpdated = function() {
+    completion.onkeyup = function() {
       var response = $.ajax({
         url: "/api/completion",
         method: "post",
