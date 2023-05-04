@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI21 API Demo</title>
+</head>
+<body>
+  <h1>AI21 API Demo</h1>
+  <form action="/api/completion" method="post">
+    <input type="text" name="prompt" placeholder="Enter your prompt here">
+    <input type="submit" value="Send">
+  </form>
+  <div id="completion"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    function generateCompletion() {
+      var prompt = $("#prompt").val();
+      $.ajax({
+        url: "/api/completion",
+        method: "post",
+        data: {
+          prompt: prompt
+        },
+        success: function(response) {
+          $("#completion").html(response);
+        }
+      });
+    }
+    $("#prompt").on("keyup", generateCompletion);
+    $("#send").on("click", generateCompletion);
+  </script>
+</body>
+</html>
