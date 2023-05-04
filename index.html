@@ -1,51 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI21 API Demo</title>
+  <title>AI21 Studio API Demo</title>
 </head>
 <body>
-  <h1>AI21 API Demo</h1>
-  <form action="/api/completion" method="post">
-    <input type="text" name="prompt" placeholder="Enter your prompt here">
+  <h1>AI21 Studio API Demo</h1>
+  <p>This page demonstrates how to integrate with the AI21 Studio API.</p>
+  <form action="/api/complete" method="post">
+    <input type="text" name="prompt" placeholder="Enter your prompt here...">
     <input type="submit" value="Send">
   </form>
-  <div id="completion"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <div id="output"></div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
-    function generateCompletion() {
+    function sendRequest() {
       var prompt = $("#prompt").val();
-      $.ajax({
-        url: "/api/completion",
-        method: "post",
-        data: {
-          prompt: prompt
-        },
-        success: function(response) {
-          $("#completion").html(response);
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/complete");
+      xhr.setRequestHeader("Authorization", "Bearer YOUR_API_KEY");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            $("#output").text(response.completionOutput);
+          } else {
+            alert("Error: " + xhr.status);
+          }
         }
-      });
+      };
+      xhr.send(JSON.stringify({
+        prompt: prompt
+      }));
     }
-    $("#prompt").on("keyup", generateCompletion);
-    $("#send").on("click", generateCompletion);
-    
-    // Add a second text box
-    var completion = document.createElement("textarea");
-    completion.id = "completion";
-    completion.onkeyup = function() {
-      var response = $.ajax({
-        url: "/api/completion",
-        method: "post",
-        data: {
-          prompt: completion.value
-        },
-        success: function(response) {
-          $("#completion").html(response);
-        }
-      });
-    };
-    document.getElementById("completion").appendChild(completion);
+    $(document).ready(function() {
+      $("#send").click(sendRequest);
+    });
   </script>
 </body>
 </html>
