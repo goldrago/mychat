@@ -33,6 +33,18 @@
     // Add a second text box
     var completion = document.createElement("textarea");
     completion.id = "completion";
+    completion.onUpdated = function() {
+      var response = $.ajax({
+        url: "/api/completion",
+        method: "post",
+        data: {
+          prompt: completion.value
+        },
+        success: function(response) {
+          $("#completion").html(response);
+        }
+      });
+    };
     document.getElementById("completion").appendChild(completion);
   </script>
 </body>
